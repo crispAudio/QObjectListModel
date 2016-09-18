@@ -42,11 +42,18 @@
 
 #include <QList>
 
-/*
+/*!
 subclass QObjectListModelT<T> to work with a typed QObjectListModel,
 e.g.
-class RackObjectListModel : public QObjectListModelT<Rack*> {
+
+\code
+#include "qobjectlistmodel.h"
+class Rack;
+
+class RackObjectListModel : public QObjectListModelT<Rack*>
+{
 };
+\endcode
 */
 
 template <class T> class QObjectListModelT : public QObjectListModel
@@ -69,7 +76,6 @@ public:
     inline T last() const { return static_cast<T>(m_objects.last()); }
 
     T get(const int i) const;
-    T getByName(const QString& str) const;
     using value_type = T;
 
     typedef typename QList<T>::iterator iterator;
@@ -87,11 +93,6 @@ private:
     QList<T>& objectListRef();
     const QList<T>& objectListRef() const;
 };
-
-template <class T> T QObjectListModelT<T>::getByName(const QString& str) const
-{
-    return static_cast<T>(QObjectListModel::getByName(str));
-}
 
 template <class T> T QObjectListModelT<T>::get(const int i) const
 {

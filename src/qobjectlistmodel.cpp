@@ -362,15 +362,6 @@ QObject* QObjectListModel::get(const int i) const
     return obj;
 }
 
-/*!
-\internal
-For usage from QML.
-*/
-Q_INVOKABLE QObject* QObjectListModel::getByName(const QString& str) const
-{
-    return get(indexOfName(str));
-}
-
 Q_INVOKABLE void QObjectListModel::listAppend(QObject* obj)
 {
     QQmlEngine::setObjectOwnership(obj, QQmlEngine::CppOwnership);
@@ -428,18 +419,6 @@ void QObjectListModel::touch()
     emit countChanged();
 }
 
-bool objectNameComparer(const QObject* o1, const QObject* o2)
-{
-    return o1->objectName() < o2->objectName();
-}
-
-void QObjectListModel::sortByName()
-{
-    beginResetModel();
-    qSort(m_objects.begin(), m_objects.end(), objectNameComparer);
-    endResetModel();
-}
-
 QVariant QObjectListModel::dataByRole(const int i, int role) const { return data(index(i), role); }
 
 bool QObjectListModel::contains(QObject* object) const
@@ -452,18 +431,9 @@ Q_INVOKABLE int QObjectListModel::indexOf(QObject* object, int from /*= 0*/) con
     return m_objects.indexOf(object, from);
 }
 
-bool QObjectListModel::containsName(const QString& str) const
+int QObjectListModel::lastIndexOf(QObject *object, int from) const
 {
-    return indexOfName(str) != -1;
-}
-
-Q_INVOKABLE int QObjectListModel::indexOfName(const QString& str) const
-{
-    int n = count();
-    for (int i = 0; i != n; ++i)
-        if (at(i)->objectName() == str)
-            return i;
-    return -1;
+    return m_objects.lastIndexOf(object, from);
 }
 
 /*!
