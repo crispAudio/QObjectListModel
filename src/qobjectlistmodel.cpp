@@ -145,7 +145,10 @@ int QObjectListModel::rowCount(const QModelIndex& parent) const
 /*!
 Returns the object list used by the model to store data.
 */
-QList<QObject*> QObjectListModel::objectList() const { return m_objects; }
+QList<QObject*> QObjectListModel::objectList() const
+{
+    return m_objects;
+}
 
 /*!
 Sets the model's internal objects list to \a objects. The model will
@@ -381,8 +384,7 @@ Q_INVOKABLE void QObjectListModel::listSetFromObjectListModel(QObjectListModel* 
     setObjectList(model->objectList());
 }
 
-Q_INVOKABLE void QObjectListModel::listSetFromItemModel(
-    QAbstractItemModel* model, int role, int column)
+Q_INVOKABLE void QObjectListModel::listSetFromItemModel(QAbstractItemModel* model, int role, int column)
 {
     if (model->columnCount() <= column)
         return;
@@ -419,7 +421,10 @@ void QObjectListModel::touch()
     emit countChanged();
 }
 
-QVariant QObjectListModel::dataByRole(const int i, int role) const { return data(index(i), role); }
+QVariant QObjectListModel::dataByRole(const int i, int role) const
+{
+    return data(index(i), role);
+}
 
 bool QObjectListModel::contains(QObject* object) const
 {
@@ -431,7 +436,7 @@ Q_INVOKABLE int QObjectListModel::indexOf(QObject* object, int from /*= 0*/) con
     return m_objects.indexOf(object, from);
 }
 
-int QObjectListModel::lastIndexOf(QObject *object, int from) const
+int QObjectListModel::lastIndexOf(QObject* object, int from) const
 {
     return m_objects.lastIndexOf(object, from);
 }

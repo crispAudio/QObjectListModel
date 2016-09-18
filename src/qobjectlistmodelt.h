@@ -70,10 +70,22 @@ public:
     }
     QList<T> objectList() const;
     void setObjectList(const QList<T>& objects);
-    inline T at(int i) const { return static_cast<T>(m_objects.at(i)); }
-    inline T operator[](int i) const { return static_cast<T>(m_objects[i]); }
-    inline T first() const { return static_cast<T>(m_objects.at(0)); }
-    inline T last() const { return static_cast<T>(m_objects.last()); }
+    inline T at(int i) const
+    {
+        return static_cast<T>(m_objects.at(i));
+    }
+    inline T operator[](int i) const
+    {
+        return static_cast<T>(m_objects[i]);
+    }
+    inline T first() const
+    {
+        return static_cast<T>(m_objects.at(0));
+    }
+    inline T last() const
+    {
+        return static_cast<T>(m_objects.last());
+    }
 
     T get(const int i) const;
     using value_type = T;
@@ -81,13 +93,31 @@ public:
     typedef typename QList<T>::iterator iterator;
     typedef typename QList<T>::const_iterator const_iterator;
 
-    iterator begin() { return objectListRef().begin(); }
-    const_iterator begin() const { return objectListRef().begin(); }
-    const_iterator cbegin() const { return objectListRef().cbegin(); }
+    iterator begin()
+    {
+        return objectListRef().begin();
+    }
+    const_iterator begin() const
+    {
+        return objectListRef().begin();
+    }
+    const_iterator cbegin() const
+    {
+        return objectListRef().cbegin();
+    }
 
-    iterator end() { return objectListRef().end(); }
-    const_iterator end() const { return objectListRef().end(); }
-    const_iterator cend() const { return objectListRef().end(); }
+    iterator end()
+    {
+        return objectListRef().end();
+    }
+    const_iterator end() const
+    {
+        return objectListRef().end();
+    }
+    const_iterator cend() const
+    {
+        return objectListRef().end();
+    }
 
 private:
     QList<T>& objectListRef();
@@ -126,13 +156,13 @@ template <class T> QList<T>& QObjectListModelT<T>::objectListRef()
     return *reinterpret_cast<QList<T>*>(&m_objects);
 }
 
-#define DECLARE_QBLIST_MODEL(CLASSNAME, TYPENAME)                                                  \
-    class CLASSNAME : public QObjectListModelT<TYPENAME>                                           \
-    {                                                                                              \
-        Q_OBJECT                                                                                   \
-    public:                                                                                        \
-        explicit CLASSNAME(QObject* parent = nullptr)                                                          \
-            : QObjectListModelT<TYPENAME>(parent)                                                  \
-        {                                                                                          \
-        }                                                                                          \
+#define DECLARE_QBLIST_MODEL(CLASSNAME, TYPENAME)                                                                      \
+    class CLASSNAME : public QObjectListModelT<TYPENAME>                                                               \
+    {                                                                                                                  \
+        Q_OBJECT                                                                                                       \
+    public:                                                                                                            \
+        explicit CLASSNAME(QObject* parent = nullptr)                                                                  \
+            : QObjectListModelT<TYPENAME>(parent)                                                                      \
+        {                                                                                                              \
+        }                                                                                                              \
     };
