@@ -6,14 +6,9 @@ CONFIG += c++11
 
 DEFINES += QOBJECTLISTMODEL_LIBRARY
 
-SOURCES += qobjectlistmodel.cpp\
-    qobjectlistmodeladapter.cpp\
-    qobjectlistmodelindex.cpp
+SOURCES += qobjectlistmodel.cpp
 
 HEADERS += qobjectlistmodel.h\
-    qobjectlistmodeladapter.h\
-    qobjectlistmodelattachment.h\
-    qobjectlistmodelindex.h\
     qobjectlistmodelt.h\
     qobjectlistmodel_global.h
 

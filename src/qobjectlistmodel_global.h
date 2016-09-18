@@ -2,8 +2,6 @@
 **
 ** Copyright (C) 2016 Guenter Schwann
 **
-** Copyright (C) 2016 Guenter Schwann
-**
 **
 ** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.

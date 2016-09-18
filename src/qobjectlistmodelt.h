@@ -42,11 +42,18 @@
 
 #include <QList>
 
-/*
+/*!
 subclass QObjectListModelT<T> to work with a typed QObjectListModel,
 e.g.
-class RackObjectListModel : public QObjectListModelT<Rack*> {
+
+\code
+#include "qobjectlistmodel.h"
+class Rack;
+
+class RackObjectListModel : public QObjectListModelT<Rack*>
+{
 };
+\endcode
 */
 
 template <class T> class QObjectListModelT : public QObjectListModel
@@ -63,35 +70,59 @@ public:
     }
     QList<T> objectList() const;
     void setObjectList(const QList<T>& objects);
-    inline T at(int i) const { return static_cast<T>(m_objects.at(i)); }
-    inline T operator[](int i) const { return static_cast<T>(m_objects[i]); }
-    inline T first() const { return static_cast<T>(m_objects.at(0)); }
-    inline T last() const { return static_cast<T>(m_objects.last()); }
+    inline T at(int i) const
+    {
+        return static_cast<T>(m_objects.at(i));
+    }
+    inline T operator[](int i) const
+    {
+        return static_cast<T>(m_objects[i]);
+    }
+    inline T first() const
+    {
+        return static_cast<T>(m_objects.at(0));
+    }
+    inline T last() const
+    {
+        return static_cast<T>(m_objects.last());
+    }
 
     T get(const int i) const;
-    T getByName(const QString& str) const;
     using value_type = T;
 
     typedef typename QList<T>::iterator iterator;
     typedef typename QList<T>::const_iterator const_iterator;
 
-    iterator begin() { return objectListRef().begin(); }
-    const_iterator begin() const { return objectListRef().begin(); }
-    const_iterator cbegin() const { return objectListRef().cbegin(); }
+    iterator begin()
+    {
+        return objectListRef().begin();
+    }
+    const_iterator begin() const
+    {
+        return objectListRef().begin();
+    }
+    const_iterator cbegin() const
+    {
+        return objectListRef().cbegin();
+    }
 
-    iterator end() { return objectListRef().end(); }
-    const_iterator end() const { return objectListRef().end(); }
-    const_iterator cend() const { return objectListRef().end(); }
+    iterator end()
+    {
+        return objectListRef().end();
+    }
+    const_iterator end() const
+    {
+        return objectListRef().end();
+    }
+    const_iterator cend() const
+    {
+        return objectListRef().end();
+    }
 
 private:
     QList<T>& objectListRef();
     const QList<T>& objectListRef() const;
 };
-
-template <class T> T QObjectListModelT<T>::getByName(const QString& str) const
-{
-    return static_cast<T>(QObjectListModel::getByName(str));
-}
 
 template <class T> T QObjectListModelT<T>::get(const int i) const
 {
@@ -125,13 +156,13 @@ template <class T> QList<T>& QObjectListModelT<T>::objectListRef()
     return *reinterpret_cast<QList<T>*>(&m_objects);
 }
 
-#define DECLARE_QBLIST_MODEL(CLASSNAME, TYPENAME)                                                  \
-    class CLASSNAME : public QObjectListModelT<TYPENAME>                                           \
-    {                                                                                              \
-        Q_OBJECT                                                                                   \
-    public:                                                                                        \
-        CLASSNAME(QObject* parent = NULL)                                                          \
-            : QObjectListModelT<TYPENAME>(parent)                                                  \
-        {                                                                                          \
-        }                                                                                          \
+#define DECLARE_QBLIST_MODEL(CLASSNAME, TYPENAME)                                                                      \
+    class CLASSNAME : public QObjectListModelT<TYPENAME>                                                               \
+    {                                                                                                                  \
+        Q_OBJECT                                                                                                       \
+    public:                                                                                                            \
+        explicit CLASSNAME(QObject* parent = nullptr)                                                                  \
+            : QObjectListModelT<TYPENAME>(parent)                                                                      \
+        {                                                                                                              \
+        }                                                                                                              \
     };
