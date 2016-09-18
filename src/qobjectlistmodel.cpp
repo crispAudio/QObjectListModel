@@ -42,9 +42,7 @@
 ****************************************************************************/
 
 #include "qobjectlistmodel.h"
-#include "qobjectlistmodelindex.h"
 
-#include <QDebug>
 #include <QQmlEngine>
 
 /*!
@@ -85,12 +83,7 @@ Constructs an object list model with the given \a parent.
 QObjectListModel::QObjectListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_tracking(false)
-    , m_indexByName(nullptr)
 {
-#ifdef _DEBUG
-    m_accessCountIndexOfObject = 0;
-    m_accessCountIndexOfName = 0;
-#endif
 }
 
 /*!
@@ -101,24 +94,14 @@ QObjectListModel::QObjectListModel(const QList<QObject*>& objects, QObject* pare
     : QAbstractListModel(parent)
     , m_objects(objects)
     , m_tracking(false)
-    , m_indexByName(nullptr)
 {
-#ifdef _DEBUG
-    m_accessCountIndexOfObject = 0;
-    m_accessCountIndexOfName = 0;
-#endif
 }
 
 QObjectListModel::QObjectListModel(QObjectListModel* objectListModel, QObject* parent /*= 0*/)
     : QAbstractListModel(parent)
     , m_objects(objectListModel->objectList())
     , m_tracking(false)
-    , m_indexByName(nullptr)
 {
-#ifdef _DEBUG
-    m_accessCountIndexOfObject = 0;
-    m_accessCountIndexOfName = 0;
-#endif
 }
 
 QHash<int, QByteArray> QObjectListModel::roleNames() const
@@ -429,10 +412,8 @@ Q_INVOKABLE void QObjectListModel::listRemove(int at, int countD)
 
 void QObjectListModel::onObjectDestroyed(QObject* obj)
 {
-    // qDebug() << "## objlistmodel on destroyed " << obj;
     int idx = indexOf(obj);
     if (idx != -1) {
-        // qDebug() << "take at " << idx;
         bool t = m_tracking;
         m_tracking = false;
         takeAt(idx);
@@ -440,18 +421,8 @@ void QObjectListModel::onObjectDestroyed(QObject* obj)
     }
 }
 
-void QObjectListModel::dump() const
-{
-    qDebug() << m_objects.count() << "objects:";
-    for (int i = 0; i != m_objects.count(); i++) {
-        qDebug() << i << m_objects.at(i)->objectName();
-        // qDebug() << m_objects.at(i);
-    }
-}
-
 void QObjectListModel::touch()
 {
-    // qDebug() << "objmodel touch" << this;
     beginResetModel();
     endResetModel();
     emit countChanged();
@@ -473,69 +444,26 @@ QVariant QObjectListModel::dataByRole(const int i, int role) const { return data
 
 bool QObjectListModel::contains(QObject* object) const
 {
-    if (hasIndexByName())
-        return m_indexByName->containsObject(object);
     return m_objects.contains(object);
 }
 
-void QObjectListModel::setIndexByName(bool enable)
-{
-    if (hasIndexByName() == enable)
-        return;
-
-    if (enable)
-        m_indexByName = new QObjectListModelIndexByName(this, true, this);
-    else
-        m_indexByName = nullptr;
-}
-
-#ifdef _DEBUG
-const int ACCESSCOUNT_PRINTINTERVAL = 10;
-#endif
-
 Q_INVOKABLE int QObjectListModel::indexOf(QObject* object, int from /*= 0*/) const
 {
-    if (from == 0 && hasIndexByName())
-        return m_indexByName->indexOfObject(object);
-#ifdef _DEBUG
-    const_cast<QObjectListModel*>(this)->m_accessCountIndexOfObject++;
-    if (m_accessCountIndexOfObject % ACCESSCOUNT_PRINTINTERVAL == 0)
-        qDebug() << "QObjectListModel::m_accessCountIndexOfObject=" << m_accessCountIndexOfObject;
-#endif
     return m_objects.indexOf(object, from);
 }
 
 bool QObjectListModel::containsName(const QString& str) const
 {
-    if (hasIndexByName())
-        return m_indexByName->containsName(str);
     return indexOfName(str) != -1;
 }
 
 Q_INVOKABLE int QObjectListModel::indexOfName(const QString& str) const
 {
-    if (hasIndexByName())
-        return m_indexByName->indexOfName(str);
-#ifdef _DEBUG
-    const_cast<QObjectListModel*>(this)->m_accessCountIndexOfName++;
-    if (m_accessCountIndexOfName % ACCESSCOUNT_PRINTINTERVAL == 0)
-        qDebug() << "QObjectListModel::m_accessCountIndexOfName=" << m_accessCountIndexOfName;
-#endif
     int n = count();
     for (int i = 0; i != n; ++i)
         if (at(i)->objectName() == str)
             return i;
     return -1;
-}
-
-QObjectListModel::~QObjectListModel()
-{
-    //#ifdef _DEBUG
-    //	qDebug()<<"QObjectListModel hadIndex: "<< hasIndexByName();
-    //	qDebug()<<"QObjectListModel accessCountIndexOfObject: "<< m_accessCountIndexOfObject;
-    //	qDebug()<<"QObjectListModel accessCountIndexOfName: "<< m_accessCountIndexOfName;
-    //	;
-    //#endif
 }
 
 /*!

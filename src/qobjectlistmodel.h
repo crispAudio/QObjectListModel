@@ -49,8 +49,6 @@
 #include <QByteArray>
 #include <QHash>
 
-class QObjectListModelIndexByName;
-
 /*
 QObjectListModel presents a way to store QObject pointers in a list
 which actively sends signals on list change.
@@ -67,9 +65,6 @@ public:
     explicit QObjectListModel(QObject* parent = 0);
     QObjectListModel(const QList<QObject*>& objects, QObject* parent = 0);
     QObjectListModel(QObjectListModel* objectListModel, QObject* parent = 0);
-    ~QObjectListModel();
-
-    //    inline QObject * parent() const { return QObject::parent(); }
 
     // connects destroy signals
     void setTracking(bool v) { m_tracking = v; }
@@ -129,13 +124,7 @@ public:
 
     void sortByName();
 
-    void dump() const; // print object names
     void touch(); // issues modelreset
-
-    // set up index for objects and their names
-    // speeds up contains/indexOf/indexOfName etc...
-    inline bool hasIndexByName() const { return m_indexByName != nullptr; }
-    void setIndexByName(bool enable);
 
 signals:
     void countChanged();
@@ -146,11 +135,4 @@ protected slots:
 protected:
     QList<QObject*> m_objects;
     bool m_tracking;
-    QObjectListModelIndexByName* m_indexByName;
-
-#ifdef _DEBUG
-    // to record access patterns to decide if indexing is useful
-    int m_accessCountIndexOfObject;
-    int m_accessCountIndexOfName;
-#endif
 };

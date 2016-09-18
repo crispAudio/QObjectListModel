@@ -130,7 +130,7 @@ template <class T> QList<T>& QObjectListModelT<T>::objectListRef()
     {                                                                                              \
         Q_OBJECT                                                                                   \
     public:                                                                                        \
-        CLASSNAME(QObject* parent = NULL)                                                          \
+        explicit CLASSNAME(QObject* parent = nullptr)                                                          \
             : QObjectListModelT<TYPENAME>(parent)                                                  \
         {                                                                                          \
         }                                                                                          \
