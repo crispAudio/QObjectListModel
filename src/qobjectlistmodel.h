@@ -63,7 +63,7 @@ public:
     QObjectListModel(QObjectListModel* objectListModel, QObject* parent = 0);
 
     // connects destroy signals
-    void setTracking(bool v) { m_tracking = v; }
+    void setTracking(bool v);
     void trackObject(const QObject* obj, const bool on);
 
     // model API
@@ -83,10 +83,22 @@ public:
     void append(const QList<QObject*>& objects);
     void insert(int i, QObject* object);
     void insert(int i, const QList<QObject*>& objects);
-    inline QObject* first() const { return m_objects.at(0); }
-    inline QObject* last() const { return m_objects.last(); }
-    inline QObject* at(int i) const { return m_objects.at(i); }
-    inline QObject* operator[](int i) const { return m_objects[i]; }
+    inline QObject* first() const
+    {
+        return m_objects.at(0);
+    }
+    inline QObject* last() const
+    {
+        return m_objects.last();
+    }
+    inline QObject* at(int i) const
+    {
+        return m_objects.at(i);
+    }
+    inline QObject* operator[](int i) const
+    {
+        return m_objects[i];
+    }
 
     void replace(int i, QObject* object);
     void move(int from, int to);
@@ -99,9 +111,18 @@ public:
     Q_INVOKABLE int indexOf(QObject* object, int from = 0) const;
     inline int lastIndexOf(QObject* object, int from = -1) const;
 
-    inline int count() const { return m_objects.count(); }
-    inline int size() const { return m_objects.size(); }
-    inline bool isEmpty() const { return m_objects.isEmpty(); }
+    inline int count() const
+    {
+        return m_objects.count();
+    }
+    inline int size() const
+    {
+        return m_objects.size();
+    }
+    inline bool isEmpty() const
+    {
+        return m_objects.isEmpty();
+    }
 
     // additional QML API
     Q_INVOKABLE QObject* get(const int i) const;
@@ -109,8 +130,7 @@ public:
     Q_INVOKABLE void listInsert(int at, QObject* obj);
     Q_INVOKABLE void listRemove(int at, int count = 1);
     Q_INVOKABLE void listSetFromObjectListModel(QObjectListModel* model);
-    Q_INVOKABLE void listSetFromItemModel(
-        QAbstractItemModel* model, int role = ObjectRole, int column = 0);
+    Q_INVOKABLE void listSetFromItemModel(QAbstractItemModel* model, int role = ObjectRole, int column = 0);
 
     void touch(); // issues modelreset
 
