@@ -1,6 +1,9 @@
+include(../coverage.pri)
+
 QT  += qml
 
 TARGET = QObjectListModel
+
 TEMPLATE = lib
 CONFIG += c++11
 
