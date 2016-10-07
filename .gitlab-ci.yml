@@ -1,28 +1,47 @@
-# This file is a template, and might need editing before it works on your project.
-# use the official gcc image, based on debian
-# can use verions as well, like gcc:5.2
-# see https://hub.docker.com/_/gcc/
-image: gcc
+image: ubuntu:xenial
 
-build:
+cache:
+  key: apt-cache
+  paths:
+  - apt-cache/
+
+before_script: 
+  - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
+  - apt-get update -yq
+  - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y build-essential g++ clang clang-3.8 make
+  - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y qtbase5-dev-tools qtdeclarative5-dev qt5-default
+  - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y lcov gcovr
+
+build_gcc:
   stage: build
-  # instead of calling g++ directly you can also use some build toolkit like make
-  # install the necessary build tools when needed
-  before_script: 
-    - apt update && apt-get install -y qtbase5-dev-tools qtdeclarative5-dev qt5-default
   script: 
-    - qmake
-    - make
-  #artifacts:
-  #  paths:
-  #    - mybinary
+    - mkdir -p build
+    - cd build
+    - qmake CONFIG+=debug CONFIG+=coverage -recursive ..
+    - make -j 4
+  artifacts:
+    paths:
+      - build
   # depending on your build setup it's most likely a good idea to cache outputs to reduce the build time
   # cache:
   #   paths:
   #     - "*.o"
 
+build_clang:
+  stage: build
+  script: 
+    - mkdir -p build_clang
+    - cd build_clang
+    - qmake QMAKE_CC=clang QMAKE_CXX=clang++ -recursive ..
+    - make -j 4
+
 # run tests using the binary built before
-#test:
-#  stage: test
-#  script:
-#    - ./runmytests.sh
+test:
+  stage: test
+  script:
+    - find build | xargs touch # Avoid rebuilding
+    - cd build
+    - export LD_LIBRARY_PATH=`pwd`/src:${LD_LIBRARY_PATH}
+    - make coverage-html
+  dependencies:
+    - build_gcc
