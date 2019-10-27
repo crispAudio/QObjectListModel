@@ -143,8 +143,8 @@ template <class T> void QObjectListModelT<T>::setObjectList(const QList<T>& obje
 
 template <class T> QList<T> QObjectListModelT<T>::objectList() const
 {
-    return *reinterpret_cast<QList<T>*>(&QObjectListModel::objectList());
-}
+    QList<QObject *> list = QObjectListModel::objectList();
+    return *reinterpret_cast<QList<T> *>(&list);}
 
 template <class T> const QList<T>& QObjectListModelT<T>::objectListRef() const
 {
